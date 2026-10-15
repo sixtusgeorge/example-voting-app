@@ -6,6 +6,9 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
+# Create a non-root user
+RUN useradd -m -u 1000 appuser
+
 # Set the application directory
 WORKDIR /usr/local/app
 
@@ -13,10 +16,11 @@ WORKDIR /usr/local/app
 COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# dev defines a stage for development, where it'll watch for filesystem changes
+# dev defines a stage for development
 FROM base AS dev
 RUN pip install watchdog
 ENV FLASK_ENV=development
+USER appuser
 CMD ["python", "app.py"]
 
 # final defines the stage that will bundle the application for production
@@ -25,8 +29,12 @@ FROM base AS final
 # Copy our code from the current folder to the working directory inside the container
 COPY . .
 
-# Make port 80 available for links and/or publish
+# Change ownership to non-root user
+RUN chown -R appuser:appuser /usr/local/app
+USER appuser
+
+# Make port 80 available
 EXPOSE 80
 
-# Define our command to be run when launching the container
+# Define our command
 CMD ["gunicorn", "app:app", "-b", "0.0.0.0:80", "--log-file", "-", "--access-logfile", "-", "--workers", "4", "--keep-alive", "0"]

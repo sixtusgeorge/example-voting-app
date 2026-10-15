@@ -7,16 +7,20 @@ RUN apt-get update && \
 
 WORKDIR /usr/local/app
 
-# have nodemon available for local dev use (file watching)
+# have nodemon available for local dev use
 RUN npm install -g nodemon
 
 COPY package*.json ./
 
 RUN npm ci && \
- npm cache clean --force && \
- mv /usr/local/app/node_modules /node_modules
+    npm cache clean --force && \
+    mv /usr/local/app/node_modules /node_modules
 
 COPY . .
+
+# Use the existing non-root "node" user that comes with the official image
+RUN chown -R node:node /usr/local/app /node_modules
+USER node
 
 ENV PORT=80
 EXPOSE 80

@@ -1,6 +1,11 @@
-*.pyc
-project.lock.json
-bin/
-obj/
-.vs/
-node_modules/
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/.terraform.lock.hcl
+terraform/*.pem
+terraform/kubeconfig.yaml
+
+# Other
+.DS_Store
+*.log
