@@ -31,10 +31,14 @@ jobs:
         run: echo "SHA_TAG=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
       # ---------- VOTE ----------
-      - name: Build Vote image
-        run: |
-          docker build -t $DOCKERHUB_USERNAME/vote:${{ steps.vars.outputs.SHA_TAG }} \
-                       -t $DOCKERHUB_USERNAME/vote:latest ./vote
+      - name: Build and Push Vote image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./vote
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_USERNAME }}/vote:${{ steps.vars.outputs.SHA_TAG }}
+            ${{ env.DOCKERHUB_USERNAME }}/vote:latest
 
       - name: Scan Vote image with Trivy
         uses: aquasecurity/trivy-action@master
@@ -45,16 +49,15 @@ jobs:
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
 
-      - name: Push Vote image
-        run: |
-          docker push $DOCKERHUB_USERNAME/vote:${{ steps.vars.outputs.SHA_TAG }}
-          docker push $DOCKERHUB_USERNAME/vote:latest
-
       # ---------- RESULT ----------
-      - name: Build Result image
-        run: |
-          docker build -t $DOCKERHUB_USERNAME/result:${{ steps.vars.outputs.SHA_TAG }} \
-                       -t $DOCKERHUB_USERNAME/result:latest ./result
+      - name: Build and Push Result image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./result
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_USERNAME }}/result:${{ steps.vars.outputs.SHA_TAG }}
+            ${{ env.DOCKERHUB_USERNAME }}/result:latest
 
       - name: Scan Result image with Trivy
         uses: aquasecurity/trivy-action@master
@@ -65,16 +68,15 @@ jobs:
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
 
-      - name: Push Result image
-        run: |
-          docker push $DOCKERHUB_USERNAME/result:${{ steps.vars.outputs.SHA_TAG }}
-          docker push $DOCKERHUB_USERNAME/result:latest
-
       # ---------- WORKER ----------
-      - name: Build Worker image
-        run: |
-          docker build -t $DOCKERHUB_USERNAME/worker:${{ steps.vars.outputs.SHA_TAG }} \
-                       -t $DOCKERHUB_USERNAME/worker:latest ./worker
+      - name: Build and Push Worker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./worker
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_USERNAME }}/worker:${{ steps.vars.outputs.SHA_TAG }}
+            ${{ env.DOCKERHUB_USERNAME }}/worker:latest
 
       - name: Scan Worker image with Trivy
         uses: aquasecurity/trivy-action@master
@@ -84,8 +86,3 @@ jobs:
           exit-code: '0'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
-
-      - name: Push Worker image
-        run: |
-          docker push $DOCKERHUB_USERNAME/worker:${{ steps.vars.outputs.SHA_TAG }}
-          docker push $DOCKERHUB_USERNAME/worker:latest
