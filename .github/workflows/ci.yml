@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ "main", "master" ]
 
-env:
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -37,13 +34,13 @@ jobs:
           context: ./vote
           push: true
           tags: |
-            ${{ env.DOCKERHUB_USERNAME }}/vote:${{ steps.vars.outputs.SHA_TAG }}
-            ${{ env.DOCKERHUB_USERNAME }}/vote:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/vote:${{ steps.vars.outputs.SHA_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/vote:latest
 
       - name: Scan Vote image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.DOCKERHUB_USERNAME }}/vote:${{ steps.vars.outputs.SHA_TAG }}
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/vote:${{ steps.vars.outputs.SHA_TAG }}
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
@@ -56,13 +53,13 @@ jobs:
           context: ./result
           push: true
           tags: |
-            ${{ env.DOCKERHUB_USERNAME }}/result:${{ steps.vars.outputs.SHA_TAG }}
-            ${{ env.DOCKERHUB_USERNAME }}/result:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/result:${{ steps.vars.outputs.SHA_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/result:latest
 
       - name: Scan Result image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.DOCKERHUB_USERNAME }}/result:${{ steps.vars.outputs.SHA_TAG }}
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/result:${{ steps.vars.outputs.SHA_TAG }}
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
@@ -75,13 +72,13 @@ jobs:
           context: ./worker
           push: true
           tags: |
-            ${{ env.DOCKERHUB_USERNAME }}/worker:${{ steps.vars.outputs.SHA_TAG }}
-            ${{ env.DOCKERHUB_USERNAME }}/worker:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/worker:${{ steps.vars.outputs.SHA_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/worker:latest
 
       - name: Scan Worker image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.DOCKERHUB_USERNAME }}/worker:${{ steps.vars.outputs.SHA_TAG }}
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/worker:${{ steps.vars.outputs.SHA_TAG }}
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
