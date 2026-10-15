@@ -25,9 +25,7 @@ jobs:
 
       - name: Set image tag
         id: vars
-        run: |
-          echo "SHA_TAG=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
-          echo "USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> $GITHUB_OUTPUT
+        run: echo "SHA_TAG=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
       # ---------- VOTE ----------
       - name: Build and Push Vote image
@@ -35,12 +33,12 @@ jobs:
         with:
           context: ./vote
           push: true
-          tags: ${{ steps.vars.outputs.USERNAME }}/vote:${{ steps.vars.outputs.SHA_TAG }},${{ steps.vars.outputs.USERNAME }}/vote:latest
+          tags: sixtusgeorge/vote:${{ steps.vars.outputs.SHA_TAG }},sixtusgeorge/vote:latest
 
       - name: Scan Vote image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ steps.vars.outputs.USERNAME }}/vote:${{ steps.vars.outputs.SHA_TAG }}
+          image-ref: sixtusgeorge/vote:${{ steps.vars.outputs.SHA_TAG }}
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
@@ -52,12 +50,12 @@ jobs:
         with:
           context: ./result
           push: true
-          tags: ${{ steps.vars.outputs.USERNAME }}/result:${{ steps.vars.outputs.SHA_TAG }},${{ steps.vars.outputs.USERNAME }}/result:latest
+          tags: sixtusgeorge/result:${{ steps.vars.outputs.SHA_TAG }},sixtusgeorge/result:latest
 
       - name: Scan Result image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ steps.vars.outputs.USERNAME }}/result:${{ steps.vars.outputs.SHA_TAG }}
+          image-ref: sixtusgeorge/result:${{ steps.vars.outputs.SHA_TAG }}
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
@@ -69,12 +67,12 @@ jobs:
         with:
           context: ./worker
           push: true
-          tags: ${{ steps.vars.outputs.USERNAME }}/worker:${{ steps.vars.outputs.SHA_TAG }},${{ steps.vars.outputs.USERNAME }}/worker:latest
+          tags: sixtusgeorge/worker:${{ steps.vars.outputs.SHA_TAG }},sixtusgeorge/worker:latest
 
       - name: Scan Worker image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ steps.vars.outputs.USERNAME }}/worker:${{ steps.vars.outputs.SHA_TAG }}
+          image-ref: sixtusgeorge/worker:${{ steps.vars.outputs.SHA_TAG }}
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
