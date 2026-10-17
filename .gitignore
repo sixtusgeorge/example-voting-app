@@ -9,3 +9,7 @@ terraform/kubeconfig.yaml
 # Other
 .DS_Store
 *.log
+terraform/kubeconfig.yaml
+terraform/k3s-key.pem
+terraform/*.tfstate*
+terraform/.terraform/

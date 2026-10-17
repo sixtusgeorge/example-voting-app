@@ -1,0 +1,24 @@
+vote:
+  image: sixtusgeorge/vote
+  tag: latest
+  replicas: 1
+
+result:
+  image: sixtusgeorge/result
+  tag: latest
+  replicas: 1
+
+worker:
+  image: sixtusgeorge/worker
+  tag: latest
+  replicas: 1
+
+redis:
+  image: redis
+  tag: alpine
+
+db:
+  image: postgres
+  tag: 15-alpine
+  user: postgres
+  password: postgres

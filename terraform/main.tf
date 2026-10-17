@@ -87,7 +87,7 @@ resource "local_file" "private_key" {
 # EC2 instance that will run k3s
 resource "aws_instance" "k3s" {
   ami           = "ami-0c7217cdde317cfec" # Ubuntu 22.04 in us-east-1
-  instance_type = "t3.micro"
+  instance_type = "t3.small"
   key_name      = aws_key_pair.k3s.key_name
   subnet_id     = data.aws_subnets.default.ids[0]
 
